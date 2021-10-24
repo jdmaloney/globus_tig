@@ -1,0 +1,9 @@
+##Globus Telegraf Config
+##
+## Example [ Description]
+##
+##log="/var/log/gridftp.log" [ path to log file being watched ]
+##endpoint="iccp" [ name of endpoint ]
+
+readonly log=""
+readonly endpoint=""
