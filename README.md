@@ -11,3 +11,8 @@ This exec script and it supporting files allow one to ingest Globus GridFTP tran
 	- Make sure you get the "GeoLite2 City" database (NOT in .csv format, but .mmdb)
 	- Place this file in the /etc/telegraf/globus/ directory with the rest of this repo's contents
 - This code will support logs timestamped in either RFC3164 and RFC5424
+
+## Deployment
+- Place all contents of this repo in /etc/telegraf/globus/
+- Configure an exec check in Telegraf to execute the gridftp_log_parse.sh script once per minute (60 seconds)
+	- Setting this frequency is important for the check to work properly given how it is configured
