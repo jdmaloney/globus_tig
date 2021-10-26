@@ -1,5 +1,5 @@
 # Globus TIG
-This exec script and it supporting files allow one to ingest Globus GridFTP transfer logs from a machine (or machines) running a Globus GridFTP endpoint.  
+This exec script and it supporting files allow one to ingest Globus GridFTP transfer logs from a machine (or machines) running a Globus GridFTP endpoint. This tool has been tested against both GCSv4 and GCSv5 installations and works for both.  
 
 ## Requirements
 - This has be built with Python3, make sure that is available
