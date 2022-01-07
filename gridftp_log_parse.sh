@@ -30,7 +30,7 @@ while read l; do
                         realtime=$(echo ${fields[0]} | sed -e 's/./&:/12;s/./&:/10;s/./& /8;s/./&-/6;s/./&-/4')
                         timestamp=$(date --date="${realtime}UTC" +%s%N)
 			ip=${fields[5]}
-			echo "transfer,endpoint=\"${endpoint}\",user=${fields[2]},geohash=${geohash},host=${fields[1]},type=${fields[6]} bytes=${fields[4]},buffer=${fields[3]},metric=1 ${timestamp}"
+			echo "transfer,endpoint=\"${endpoint}\",user=${fields[2]},geohash=${geohash},type=${fields[6]} bytes=${fields[4]},buffer=${fields[3]},metric=1 ${timestamp}"
 	fi
 done < ${tfile}
 rm -rf ${tfile}
