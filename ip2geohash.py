@@ -15,7 +15,7 @@ import sys
 ip_address = sys.argv[1]
 
 try:
-    reader = geoip2.database.Reader("/etc/telegraf/globus/GeoLite2-City.mmdb")
+    reader = geoip2.database.Reader("./GeoLite2-City.mmdb")
 except:
     print("GeoLite2-City.mmdb must be in same directory as script.")
     exit(1)
