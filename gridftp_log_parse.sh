@@ -22,8 +22,8 @@ while read l; do
 	if [[ ${fields[5]} =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
                         ## Convert IP to Lat/Long, cache results if IP same as prior log line
 			if [ -z ${latitude} ] || [ ${ip} != ${fields[5]} ]; then
-                                IFS="," read -r latitude longitude < <(curl http://ip-api.com/csv/${fields[5]} 2> /dev/null | cut -d',' -f 8,9)
-                                if [ -z ${latitude} ]; then
+                                IFS="," read -r success latitude longitude organization < <(curl http://ip-api.com/csv/${fields[5]} 2> /dev/null | cut -d',' -f 1,8,9,11)
+                                if [ ${success} != "success" ]; then
                                         latitutude="${def_lat}"
                                         longitude="${def_long}"
                                 fi
@@ -31,7 +31,7 @@ while read l; do
 			realtime=$(echo ${fields[0]} | sed -e 's/./&:/12;s/./&:/10;s/./& /8;s/./&-/6;s/./&-/4')
                         timestamp=$(date --date="${realtime}UTC" +%s%N)
 			ip=${fields[5]}
-			echo "transfer,endpoint=${endpoint},user=${fields[2]},latitude=${latitude},longitude=${longitude},type=${fields[6]} bytes=${fields[4]},buffer=${fields[3]},metric=1 ${timestamp}"
+			echo "transfer,endpoint=${endpoint},user=${fields[2]},latitude=${latitude},longitude=${longitude},src_dest_org=\"${organization}\",type=${fields[6]} bytes=${fields[4]},buffer=${fields[3]},metric=1 ${timestamp}"
 	fi
 done < ${tfile}
 rm -rf ${tfile}
