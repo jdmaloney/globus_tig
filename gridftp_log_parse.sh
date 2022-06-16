@@ -20,17 +20,18 @@ cat ${log} | cut -d' ' -f 2- | grep "${date_filter}" | sed -e 's/.*DATE=\(.*\) H
 while read l; do
 	fields=($(echo ${l}))
 	if [[ ${fields[5]} =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-                        ## Convert IP to Gehash and timestamp to correct format, cached geohash to improve speed if same IP is sequential ##
-                        if [ -z ${geohash} ] || [ ${ip} != ${fields[5]} ]; then
-                                geohash=$(python3 ./ip2geohash.py ${fields[5]})
-				if [ -z ${geohash} ]; then
-					geohash=dp1k0q6encpx
-				fi
+                        ## Convert IP to Lat/Long, cache results if IP same as prior log line
+			if [ -z ${latitude} ] || [ ${ip} != ${fields[5]} ]; then
+                                IFS="," read -r latitude longitude < <(curl http://ip-api.com/csv/${fields[5]} 2> /dev/null | cut -d',' -f 8,9)
+                                if [ -z ${latitude} ]; then
+                                        latitutude="${def_lat}"
+                                        longitude="${def_long}"
+                                fi
                         fi
-                        realtime=$(echo ${fields[0]} | sed -e 's/./&:/12;s/./&:/10;s/./& /8;s/./&-/6;s/./&-/4')
+			realtime=$(echo ${fields[0]} | sed -e 's/./&:/12;s/./&:/10;s/./& /8;s/./&-/6;s/./&-/4')
                         timestamp=$(date --date="${realtime}UTC" +%s%N)
 			ip=${fields[5]}
-			echo "transfer,endpoint=${endpoint},user=${fields[2]},geohash=${geohash},type=${fields[6]} bytes=${fields[4]},buffer=${fields[3]},metric=1 ${timestamp}"
+			echo "transfer,endpoint=${endpoint},user=${fields[2]},latitude=${latitude},longitude=${longitude},type=${fields[6]} bytes=${fields[4]},buffer=${fields[3]},metric=1 ${timestamp}"
 	fi
 done < ${tfile}
 rm -rf ${tfile}

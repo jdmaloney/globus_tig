@@ -1,9 +1,6 @@
 ##Globus Telegraf Config
-##
-## Example [ Description]
-##
-##log="/var/log/gridftp.log" [ path to log file being watched ]
-##endpoint="iccp" [ name of endpoint ]
 
-readonly log=""
-readonly endpoint=""
+readonly log="" ## Path to Transfer Log
+readonly endpoint="" ## Name of Globus Endpoint
+readonly default_lat="" ## Latitude for default location if ip can't resolve to coordinate
+readonly default_long="" ## Longitude for default location if ip can't resolve to coordinate
