@@ -22,11 +22,13 @@ while read l; do
 	if [[ ${fields[5]} =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
                         ## Convert IP to Lat/Long, cache results if IP same as prior log line
 			if [ -z ${latitude} ] || [ ${ip} != ${fields[5]} ]; then
-                                IFS="," read -r success latitude longitude organization < <(curl http://ip-api.com/csv/${fields[5]} 2> /dev/null | cut -d',' -f 1,8,9,11)
+                                IFS="," read -r success latitude longitude org_raw < <(curl http://ip-api.com/csv/${fields[5]} 2> /dev/null | cut -d',' -f 1,8,9,11)
                                 if [ ${success} != "success" ]; then
                                         latitutude="${def_lat}"
                                         longitude="${def_long}"
-                                fi
+					organization="Not\ Found"
+				fi
+				organization=$(echo "${org_raw}" | sed 's/\ /\\ /g')
                         fi
 			realtime=$(echo ${fields[0]} | sed -e 's/./&:/12;s/./&:/10;s/./& /8;s/./&-/6;s/./&-/4')
                         timestamp=$(date --date="${realtime}UTC" +%s%N)
