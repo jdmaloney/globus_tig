@@ -24,12 +24,13 @@ while read l; do
 			if [ -z ${latitude} ] || [ ${ip} != ${fields[5]} ]; then
                                 IFS="," read -r success latitude longitude org < <(curl http://ip-api.com/csv/${fields[5]} 2> /dev/null | cut -d',' -f 1,8,9,11)
                                 if [ ${success} != "success" ]; then
-                                        latitutude="${def_lat}"
-                                        longitude="${def_long}"
+                                        latitude="${default_lat}"
+                                        longitude="${default_long}"
 					organization="Not\ Found"
+				else
+					organization=$(echo "${org_raw}" | sed 's/\ /\\ /g')
 				fi
-				organization=$(echo "${org_raw}" | sed 's/\ /\\ /g')
-                        fi
+			fi
 			organization=$(echo \""${org}"\" | sed 's/\ /\\ /g')
 			realtime=$(echo ${fields[0]} | sed -e 's/./&:/12;s/./&:/10;s/./& /8;s/./&-/6;s/./&-/4')
                         timestamp=$(date --date="${realtime}UTC" +%s%N)
